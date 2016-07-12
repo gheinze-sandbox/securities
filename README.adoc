@@ -1,0 +1,67 @@
+== Stock Querying Utilities
+
+
+=== stock-quote
+A command line utility for querying a stock service. Includes a service implementation (stock-quote-yaoo) as an example and wraps utilities in executables.
+
+=== stock-quote-api
+An interface specification used by the stock-quote service. Implementations can be discovered by the stock-quote service via the ServiceLoader mechanism.
+
+=== stock-quote-yahoo
+An implementation of the stock-quote-api
+
+=== stock-quote-tmx  
+An example of scraping Options data from a web page.
+
+
+
+[source,bash]
+----
+stock-quote-1.0-SNAPSHOT/bin$ ./stockquote.sh -help
+
+usage: Query
+ -attributes <queryAttributes>   comma separated list of attributs to
+                                 query for, ex last
+ -help                           print this message
+ -service <serviceName>          query the given service
+ -showAttributes                 list attributes that may be retrieved
+ -showServices                   list the stock quoting services
+                                 configured for queries
+ -symbols <tickerSymbols>        comma separated list of ticker symbols to
+                                 query
+ -version                        print the version information and exit
+
+
+stock-quote-1.0-SNAPSHOT/bin$ ./stockquote.sh -showServices
+
+Discovered services: 
+  Yahoo
+
+
+stock-quote-1.0-SNAPSHOT/bin$ ./stockquote.sh -showAttributes
+
+Supported query attributes: 
+  SYMBOL
+  COMPANY_NAME
+  LAST_TRADE_PRICE
+  BOOK_VALUE
+  EARNINGS_PS
+  DIVIDEND_PS
+  EX_DIVIDEND_DATE
+  DIVIDEND_DATE
+  DIVIDEND_YIELD
+  PRICE_SALES
+  PRICE_BOOK
+  PRICE_EARNINGS
+
+
+stock-quote-1.0-SNAPSHOT/bin$ ./stockquote.sh -service Yahoo -symbols BMO.TO,SLF.TO -attributes LAST_TRADE_PRICE,COMPANY_NAME
+
+Query url: http://finance.yahoo.com/d/quotes.csv?s=BMO.TO+SLF.TO&f=l1n
+
+  LAST_TRADE_PRICE = 83.66
+  COMPANY_NAME = "BANK OF MONTREAL"
+
+  LAST_TRADE_PRICE = 42.05
+  COMPANY_NAME = "SUN LIFE FINANCIAL INC."
+----
