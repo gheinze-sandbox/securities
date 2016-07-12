@@ -2,13 +2,13 @@
 
 
 === stock-quote
-A command line utility for querying a stock service. Includes a service implementation (stock-quote-yaoo) as an example and wraps utilities in executables.
+A command line utility for querying a stock service. Includes a service implementation (`stock-quote-yahoo`) as an example.  Wraps utilities in executable script.
 
 === stock-quote-api
-An interface specification used by the stock-quote service. Implementations can be discovered by the stock-quote service via the ServiceLoader mechanism.
+An interface specification used by the `stock-quote` service. Implementations can be discovered by the `stock-quote` service via the `ServiceLoader` mechanism.
 
 === stock-quote-yahoo
-An implementation of the stock-quote-api
+An implementation of the `stock-quote-api`
 
 === stock-quote-tmx  
 An example of scraping Options data from a web page.
