@@ -1,0 +1,32 @@
+=== Options
+
+JavaScript library for building SVG elements to represent options.
+
+==== Option State
+
+The following call to `a4.generateOptionStateSvg`:
+
+[source,javascript]
+----
+var underlyingCommodityPriceAtPurchase = 60;
+var strikePrice = 65;
+var premium = 6;
+
+var option = new a4.Option(a4.optionType.CALL, underlyingCommodityPriceAtPurchase, strikePrice, premium);
+var currentPrice = 62;
+var plotRange = { start: 50, end: 70 };
+
+var container = d3.select("#optionSvgContainerId");
+
+a4.generateOptionStateSvg(container, option, currentPrice, plotRange);
+----
+
+Will generate an SVG like this:
+
+image:img/callOptionState.png[]
+
+* the solid line indicates ownership of the underlying commodity on expiry
+* the dashed line indicates non-ownership of the underlying commodity on expiry
+* the transition between the lines represents the strike price
+* the black dot was the price of the underlying commodity at time of option purchase
+* green triangle represents current price of underlying commodity
