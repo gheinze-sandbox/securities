@@ -35,7 +35,7 @@
 
             var option = new a4.Option(a4.optionType.CALL, underlyingCommodityPriceAtPurchase, strikePrice, premium);
             var currentPrice = 62;
-            var plotRange = { start: 50, end: 70 };
+            var plotRange = { start: 40, end: 80 };
 
             var container = d3.select("#optionSvgContainerId");
 
@@ -44,6 +44,10 @@
             container.append("p");
 
             option.optionType = a4.optionType.PUT;
+            option.strikePrice = 55;
+            option.premium = 3;
+            currentPrice = 64;
+
             a4.generateOptionStateSvg(container, option, currentPrice, plotRange);
 
         </script>

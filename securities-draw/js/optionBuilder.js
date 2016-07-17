@@ -124,23 +124,49 @@ $(document).ready(function () {
 
         if (option.optionType === 'CALL') {
             lineAfterStrikePrice.style("stroke-dasharray", ("3, 3"));
+            addPremiumPriceMarker(svg, xScale(option.strikePrice + option.premium), midHeight);
         } else {
             lineUpToStrikePrice.style("stroke-dasharray", ("3, 3"));
+            addPremiumPriceMarker(svg, xScale(option.strikePrice - option.premium), midHeight);
         }
 
-        // underlying price at time of purchase
+        addUnderlyingPurchasePriceMarker(svg, xScale(option.underlyingCommodityPriceAtPurchase), midHeight);
+
+        addCurrentPriceMarker(svg, xScale(currentPrice), midHeight);
+
+        addPriceToolTips(container, svg, option, currentPrice);
+
+    }
+
+
+    function addUnderlyingPurchasePriceMarker(svg, x, y) {
         svg.append("circle")
-                .attr("cx", function(d) { return xScale(option.underlyingCommodityPriceAtPurchase); })
-                .attr("cy", midHeight)
-                .attr("r", 3)
+                .attr("cx", function(d) { return x; })
+                .attr("cy", y)
+                .attr("r", 2)
+        ;
+    }
+
+
+    function addPremiumPriceMarker(svg, x, y) {
+        svg.append("line")
+                .attr("x1", function(d) { return x; })
+                .attr("y1", y - 3)
+                .attr("x2", function(d) { return x; })
+                .attr("y2", y + 3)
+                .attr("stroke-width", 2)
+                .attr("stroke", "red")
         ;
 
-        // current price
+    }
+
+
+    function addCurrentPriceMarker(svg, x, y) {
 
         var color = "green";
         var triangleSize = 25;
         var sqrt3 = Math.sqrt(3);
-        var verticalTransform = midHeight + Math.sqrt(triangleSize / (sqrt3 * 3)) * 2;
+        var verticalTranslation = y + Math.sqrt(triangleSize / (sqrt3 * 3)) * 2;
 
         var triangle = d3.symbol()
                 .type(d3.symbolTriangle)
@@ -151,11 +177,39 @@ $(document).ready(function () {
                 .attr("d", triangle)
                 .attr("stroke", color)
                 .attr("fill", color)
-                .attr("transform", function(d) { return "translate(" + xScale(currentPrice) + "," + verticalTransform + ")"; });
+                .attr("transform", function(d) { return "translate(" + x + "," + verticalTranslation + ")"; });
         ;
 
     }
 
+
+    function addPriceToolTips(container, svg, option, currentPrice) {
+
+        var currencyFormatter = d3.format("0,.2f");
+        var adjustedPremium = option.strikePrice +
+               (option.optionType === 'CALL' ? option.premium : -option.premium);
+
+        var tooltipDiv = container
+                .append("div")
+                .style("position", "absolute")
+                .style("z-index", "10")
+                .style("visibility", "hidden")
+                .html("<table bgcolor='#FFFFFF'>" +
+                     "<tr><td><b>current:</b></td><td><font color='green'>" + currencyFormatter(currentPrice) + "</font></td></tr>" +
+                     "<tr><td><b>strike:</b></td><td><font color='grey'>" + currencyFormatter(option.strikePrice) + "</font></td></tr>" +
+                     "<tr><td><b>premium delta:</b></td><td><font color='red'>" + currencyFormatter(adjustedPremium) + "</font></td></tr>" +
+                     "<tr><td><b>historical:</b></td><td>" + currencyFormatter(option.underlyingCommodityPriceAtPurchase) + "</td></tr>" +
+                     "</table>"
+                )
+                ;
+
+
+        svg
+                .on("mouseover", function() { return tooltipDiv.style("visibility", "visible"); })
+                .on("mousemove", function() { return tooltipDiv.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px"); })
+                .on("mouseout",  function() { return tooltipDiv.style("visibility", "hidden"); });
+
+    }
 
 
 })(a4);
